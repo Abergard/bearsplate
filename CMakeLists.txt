@@ -12,7 +12,7 @@ option(FORCE_BUILD_CONSOLE_APP "TRUE - console application, FALSE (default) - de
 option(ENABLE_COVERAGE "Enable coverage reporting for gcc/clang" FALSE)
 
 if(ENABLE_COVERAGE)
-  add_compile_options(--coverage -O0)
+  add_compile_options(--coverage -O0 -g)
   link_libraries(--coverage)
 endif()
 
