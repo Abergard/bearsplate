@@ -20,9 +20,6 @@ matrix:
       - CXX_COMPILER=g++-8
 
 script:
-  - gcov --version
-  - gcov-8 --version
-  - alias gcov=gcov-8
   - mkdir build
   - cd build
   - env CC=${C_COMPILER} CXX=${CXX_COMPILER} cmake .. -DENABLE_COVERAGE=TRUE
@@ -31,4 +28,4 @@ script:
   - ctest -j `nproc` --output-on-failure
 
 after_success:
-  - bash <(curl -s https://codecov.io/bash)
+  - bash <(curl -s https://codecov.io/bash) -x gcov-8
