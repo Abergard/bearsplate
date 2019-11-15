@@ -6,7 +6,7 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    
+
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
@@ -19,3 +19,5 @@ jobs:
       run: |
         echo Add other actions to build,
         echo test, and deploy your project.
+        cmake --version
+        clang --version
