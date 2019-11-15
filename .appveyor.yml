@@ -49,6 +49,7 @@ before_build:
   - git submodule update
 
 build_script:
+  - nproc
   - mkdir build
   - cd build
   - cmake .. -GNinja -DCMAKE_BUILD_TYPE=%CONFIGURATION%
@@ -56,10 +57,10 @@ build_script:
                      -DCMAKE_C_COMPILER=%C_COMPILER%
                      -DENABLE_TESTING=TRUE
 
-  - cmake --build . --config %CONFIGURATION% -j nproc
+  - cmake --build . --config %CONFIGURATION% -j 2
 
 test_script:
-  - ctest --output-on-failure -j nproc
+  - ctest --output-on-failure -j 2
 
 matrix:
   fast_finish: true
