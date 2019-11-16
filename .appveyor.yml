@@ -62,6 +62,10 @@ build_script:
 test_script:
   - ctest --output-on-failure -j 2
   
+artifacts:
+  - path: 'bin/bearsplate.exe'
+    name: binary
+  
 deploy:
   release: bearsplate-v$(appveyor_build_version)
   description: 'Release description'
