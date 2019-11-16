@@ -1,3 +1,5 @@
+skip_tags: true
+
 version: '1.0.{build}'
 
 image:
@@ -69,7 +71,7 @@ artifacts:
     name: binary
 
 deploy:
-  release: bearsplate-v$(appveyor_build_version)-%platform%-win32
+  release: bearsplate-v$(appveyor_build_version)-%platform%-win
   description: 'Release %PACKAGE_NAME%-v$(appveyor_build_version) for windows'
   provider: GitHub
   auth_token:
