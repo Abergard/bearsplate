@@ -79,8 +79,8 @@ install:
   - cmd: set PATH=%NINJA_BIN%;%PATH%
 
   - ninja --version
-  - cmd: %cxx_compiler% /?
-  - sh: %cxx_compiler% --version
+  - cmd: %CXX_COMPILER% /?
+  - sh: $CXX_COMPILER --version
 
 before_build:
   - cmd: call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat"
