@@ -103,6 +103,7 @@ build_script:
   - cmd: echo %C_COMPILER%
   - cmd: echo $c_compiler
   - cmd: echo $(c_compiler)
+  - cmd: echo ${c_compiler}
   - cmd: echo %CXX_COMPILER%
   - cmd: cmake .. -GNinja -DCMAKE_BUILD_TYPE=%CONFIGURATION%
                      -DCMAKE_CXX_COMPILER=%CXX_COMPILER%
@@ -110,11 +111,11 @@ build_script:
                      -DENABLE_TESTING=TRUE
   - cmd: cmake --build . --config %CONFIGURATION% -j 2
 
-  - sh: cmake .. -GNinja -DCMAKE_BUILD_TYPE=$(configuration)
-                     -DCMAKE_CXX_COMPILER=$(cxx_compiler)
-                     -DCMAKE_C_COMPILER=$(c_compiler)
+  - sh: cmake .. -GNinja -DCMAKE_BUILD_TYPE=${configuration}
+                     -DCMAKE_CXX_COMPILER=${cxx_compiler}
+                     -DCMAKE_C_COMPILER=${c_compiler}
                      -DENABLE_TESTING=TRUE
-  - sh: cmake --build . --config $(configuration) -j 2
+  - sh: cmake --build . --config ${configuration} -j 2
 
 test_script:
   - ctest --output-on-failure -j 2
