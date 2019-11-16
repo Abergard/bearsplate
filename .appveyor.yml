@@ -3,7 +3,7 @@ skip_tags: true
 version: '1.0.{build}'
 
 image:
-  - Visual Studio 2019
+  #- Visual Studio 2019
   - Ubuntu1804
 
 build:
@@ -14,8 +14,8 @@ environment:
     - compiler: native
     - compiler: clang
 
-matrix:
-  fast_finish: true
+#matrix:
+  #fast_finish: true
 
 for:
   -
@@ -52,12 +52,12 @@ for:
       cxx_compiler: clang++
 
 platform:
-  - x86
+  #- x86
   - x64
 
 configuration:
   - Debug
-  - Release
+ # - Release
 
 cache:
   - c:\projects\deps -> .appveyor.yml
@@ -79,7 +79,7 @@ install:
   - cmd: set PATH=%NINJA_BIN%;%PATH%
   
   - sh: sudo apt update
-  - sh: sudo apt install ninja
+  - sh: sudo apt install ninja-build
 
   - ninja --version
   - cmd: clang-cl -v
