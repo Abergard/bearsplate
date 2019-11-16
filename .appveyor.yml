@@ -11,29 +11,20 @@ build:
 
 environment:
   matrix:
-    - c_compiler: clang-cl
-      cxx_compiler: clang-cl
-
-    - c_compiler: cl
-      cxx_compiler: cl
-      
-    - c_compiler: gcc
-      cxx_compiler: g++
-      
-matrix:
-  fast_finish: true
-  exclude:
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
-      c_compiler: gcc
-      cxx_compiler: g++
-      
-    - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu1804
       c_compiler: clang-cl
       cxx_compiler: clang-cl
-    
-    - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu1804
+
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
       c_compiler: cl
       cxx_compiler: cl
+      
+    - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu1804
+      c_compiler: gcc
+      cxx_compiler: g++
+
+matrix:
+  fast_finish: true
 
 platform:
   - x86
@@ -44,9 +35,11 @@ configuration:
   - Release
 
 cache:
-  - cmd: c:\projects\deps -> .appveyor.yml
+  - c:\projects\deps -> .appveyor.yml
 
 install:
+  - cmd: echo %cd%
+  - sh: pwd
   - cmd: set NINJA_URL="https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-win.zip"
   - cmd: set DEPS_DIR=C:\projects\deps
 
