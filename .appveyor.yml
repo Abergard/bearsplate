@@ -11,6 +11,7 @@ build:
 
 for:
   - matrix:
+      fast_finish: true
       only:
         - image: Visual Studio 2019
       environment:
@@ -22,15 +23,13 @@ for:
             cxx_compiler: cl
 
   - matrix:
+      fast_finish: true
       only:
         - image: Ubuntu1804
       environment:
         matrix:
           - c_compiler: gcc
             cxx_compiler: g++
-
-matrix:
-  fast_finish: true
 
 platform:
   - x86
