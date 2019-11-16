@@ -69,7 +69,7 @@ artifacts:
     name: binary
 
 deploy:
-  release: bearsplate-v$(appveyor_build_version)
+  release: bearsplate-v$(appveyor_build_version)-%platform%-%cxx_compiler%
   description: 'Release description'
   provider: GitHub
   auth_token:
