@@ -1,18 +1,31 @@
-os: Visual Studio 2017
+version: '1.0.{build}'
+
+image:
+  - Visual Studio 2019
 
 build:
   verbosity: detailed
 
 environment:
+  package_name: bearsplate.exe
+
   matrix:
-  - Build: bearsplate
-    Configuration: Debug
+    - c_compiler: clang-cl
+      cxx_compiler: clang-cl
+
+    - c_compiler: cl
+      cxx_compiler: cl
+
+platform:
+  - x86
+  - x64
+
+configuration:
+  - Debug
+  - Release
 
 cache:
   - c:\projects\deps -> .appveyor.yml
-
-platform:
-- x64
 
 install:
   - set NINJA_URL="https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-win.zip"
@@ -24,7 +37,7 @@ install:
       appveyor DownloadFile %NINJA_URL% -FileName ninja.zip &&
       7z x ninja.zip -o%DEPS_DIR%\ninja > nul )
 
-  - set BOOST_ROOT=C:\Libraries\boost_1_69_0
+  - set BOOST_ROOT=C:\Libraries\boost_1_71_0
   - set NINJA_BIN=%DEPS_DIR%\ninja
   - set PATH=%NINJA_BIN%;%PATH%
 
@@ -32,19 +45,41 @@ install:
   - clang-cl -v
 
 before_build:
-  - call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
+  - call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat"
   - cd %APPVEYOR_BUILD_FOLDER%
   - git submodule init
   - git submodule update
 
 build_script:
+  - nproc
   - mkdir build
   - cd build
-  - cmake .. -GNinja -DCMAKE_BUILD_TYPE=%Configuration%
-                     -DCMAKE_CXX_COMPILER=clang-cl
-                     -DCMAKE_C_COMPILER=clang-cl
-  - cmake --build .
+  - cmake .. -GNinja -DCMAKE_BUILD_TYPE=%CONFIGURATION%
+                     -DCMAKE_CXX_COMPILER=%CXX_COMPILER%
+                     -DCMAKE_C_COMPILER=%C_COMPILER%
+                     -DENABLE_TESTING=TRUE
+
+  - cmake --build . --config %CONFIGURATION% -j 2
 
 test_script:
-  - ps: |
-      & ctest --output-on-failure -j nproc
+  - ctest --output-on-failure -j 2
+
+artifacts:
+  - path: 'build/bin/%PACKAGE_NAME%'
+    name: binary
+
+deploy:
+  release: bearsplate-v$(appveyor_build_version)
+  description: 'Release description'
+  provider: GitHub
+  auth_token:
+    secure: 6sWJttUxwB1HzKovRfV2uEx7bTNdSP/g9X4cupAFmM0J3SQvd+nddSMLXJW7R/vC
+  artifact: binary
+  draft: false
+  prerelease: false
+  on:
+    branch: master
+    configuration: Release
+
+matrix:
+  fast_finish: true

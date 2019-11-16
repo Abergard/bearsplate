@@ -1,5 +1,5 @@
 sudo: required
-dist: xenial
+dist: bionic
 language: cpp
 
 matrix:
@@ -20,9 +20,10 @@ matrix:
       - CXX_COMPILER=g++-8
 
 script:
+  - cmake --version
   - mkdir build
   - cd build
-  - env CC=${C_COMPILER} CXX=${CXX_COMPILER} cmake .. -DENABLE_COVERAGE=TRUE
+  - env CC=${C_COMPILER} CXX=${CXX_COMPILER} cmake .. -DENABLE_COVERAGE=TRUE -DENABLE_TESTING=TRUE
   - echo "We have" `nproc` "cores here"
   - make -j `nproc`
   - ctest -j `nproc` --output-on-failure
