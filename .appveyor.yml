@@ -29,6 +29,7 @@ for:
     environment:
       c_compiler: cl
       cxx_compiler: cl
+
   -
     matrix:
       only:
@@ -37,6 +38,7 @@ for:
     environment:
       c_compiler: clang-cl
       cxx_compiler: clang-cl
+
   -
     matrix:
       only:
@@ -45,6 +47,7 @@ for:
     environment:
       c_compiler: gcc
       cxx_compiler: g++
+
   -
     matrix:
       only:
@@ -101,9 +104,6 @@ build_script:
   - cd build
 
   - cmd: echo %C_COMPILER%
-  - cmd: echo $c_compiler
-  - cmd: echo $(c_compiler)
-  - cmd: echo ${c_compiler}
   - cmd: echo %CXX_COMPILER%
   - cmd: cmake .. -GNinja -DCMAKE_BUILD_TYPE=%CONFIGURATION%
                      -DCMAKE_CXX_COMPILER=%CXX_COMPILER%
@@ -111,6 +111,8 @@ build_script:
                      -DENABLE_TESTING=TRUE
   - cmd: cmake --build . --config %CONFIGURATION% -j 2
 
+  - sh: echo ${cxx_compiler}
+  - sh: echo ${c_compiler}
   - sh: cmake .. -GNinja -DCMAKE_BUILD_TYPE=${configuration}
                      -DCMAKE_CXX_COMPILER=${cxx_compiler}
                      -DCMAKE_C_COMPILER=${c_compiler}
