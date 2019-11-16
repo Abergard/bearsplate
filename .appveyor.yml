@@ -69,8 +69,8 @@ artifacts:
     name: binary
 
 deploy:
-  release: bearsplate-v$(appveyor_build_version)-%platform%-%cxx_compiler%
-  description: 'Release description'
+  release: bearsplate-v$(appveyor_build_version)-%platform%-win32
+  description: 'Release %PACKAGE_NAME%-v$(appveyor_build_version) for windows'
   provider: GitHub
   auth_token:
     secure: 6sWJttUxwB1HzKovRfV2uEx7bTNdSP/g9X4cupAFmM0J3SQvd+nddSMLXJW7R/vC
@@ -80,7 +80,7 @@ deploy:
   on:
     branch: master
     configuration: Release
-    APPVEYOR_REPO_TAG: true
+    APPVEYOR_REPO_TAG: false
 
 matrix:
   fast_finish: true
