@@ -9,27 +9,47 @@ image:
 build:
   verbosity: detailed
 
+environment:
+  matrix:
+    - compiler: native
+    - compiler: clang
+
+matrix:
+  fast_finish: true
+
 for:
-  - matrix:
-      fast_finish: true
+  -
+    matrix:
       only:
         - image: Visual Studio 2019
-      environment:
-        matrix:
-          - c_compiler: clang-cl
-            cxx_compiler: clang-cl
-
-          - c_compiler: cl
-            cxx_compiler: cl
-
-  - matrix:
-      fast_finish: true
+          compiler: native
+    environment:
+      c_compiler: cl
+      cxx_compiler: cl
+  -
+    matrix:
+      only:
+        - image: Visual Studio 2019
+          compiler: clang
+    environment:
+      c_compiler: clang-cl
+      cxx_compiler: clang-cl
+  -
+    matrix:
       only:
         - image: Ubuntu1804
-      environment:
-        matrix:
-          - c_compiler: gcc
-            cxx_compiler: g++
+          compiler: native
+    environment:
+      c_compiler: gcc
+      cxx_compiler: g++
+  -
+    matrix:
+      only:
+        - image: Ubuntu1804
+          compiler: clang
+    environment:
+      c_compiler: clang
+      cxx_compiler: clang++
 
 platform:
   - x86
