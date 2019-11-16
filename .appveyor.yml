@@ -63,7 +63,7 @@ test_script:
   - ctest --output-on-failure -j 2
   
 artifacts:
-  - path: 'bin/bearsplate.exe'
+  - path: '%APPVEYOR_BUILD_FOLDER%/build/bin/bearsplate.exe'
     name: binary
   
 deploy:
