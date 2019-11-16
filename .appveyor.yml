@@ -77,6 +77,9 @@ install:
   - cmd: set BOOST_ROOT=C:\Libraries\boost_1_71_0
   - cmd: set NINJA_BIN=%DEPS_DIR%\ninja
   - cmd: set PATH=%NINJA_BIN%;%PATH%
+  
+  - sh: sudo apt update
+  - sh: sudo apt install ninja
 
   - ninja --version
   - cmd: clang-cl -v
