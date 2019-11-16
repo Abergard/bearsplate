@@ -7,6 +7,8 @@ build:
   verbosity: detailed
 
 environment:
+  package_name: bearsplate.exe
+
   matrix:
     - c_compiler: clang-cl
       cxx_compiler: clang-cl
@@ -58,14 +60,12 @@ build_script:
                      -DENABLE_TESTING=TRUE
 
   - cmake --build . --config %CONFIGURATION% -j 2
-  - ls C:/projects/bearsplate
-  - ls C:/projects/bearsplate/build
 
 test_script:
   - ctest --output-on-failure -j 2
   
 artifacts:
-  - path: 'build/bin/bearsplate.exe'
+  - path: 'build/bin/%PACKAGE_NAME%'
     name: binary
   
 deploy:
@@ -79,6 +79,7 @@ deploy:
   prerelease: false
   on:
     branch: master
+    configuration: Release
 
 matrix:
   fast_finish: true
