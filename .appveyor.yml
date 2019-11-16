@@ -64,13 +64,13 @@ configuration:
  # - Release
 
 cache:
-  - c:\projects\deps -> .appveyor.yml
+  - ..\deps -> .appveyor.yml
 
 install:
   - cmd: echo %cd%
   - sh: pwd
   - cmd: set NINJA_URL="https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-win.zip"
-  - cmd: set DEPS_DIR=C:\projects\deps
+  - cmd: set DEPS_DIR="%APPVEYOR_BUILD_FOLDER%\..\deps"
 
   - cmd: if not exist %DEPS_DIR% (
       mkdir %DEPS_DIR% &&
