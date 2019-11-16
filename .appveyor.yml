@@ -109,7 +109,12 @@ build_script:
   - cmd: cmake --build . --config %CONFIGURATION% -j 2
 
   - sh: echo $C_COMPILER
+  - sh: echo $(C_COMPILER)
+  - sh: echo ${C_COMPILER}
   - sh: echo $CXX_COMPILER
+  - sh: echo $c_compiler
+  - sh: echo ${c_compiler}
+  - sh: echo $(c_compiler)
   - sh: cmake .. -GNinja -DCMAKE_BUILD_TYPE=$CONFIGURATION
                      -DCMAKE_CXX_COMPILER=$CXX_COMPILER
                      -DCMAKE_C_COMPILER=$C_COMPILER
