@@ -13,9 +13,7 @@ build:
 environment:
   matrix:
     - compiler: native
-      c_compiler:
     - compiler: clang
-      c_compiler:
 
 #matrix:
   #fast_finish: true
@@ -103,6 +101,7 @@ build_script:
   - mkdir build
   - cd build
 
+  - cmd: echo %c_compiler%
   - cmd: echo %C_COMPILER%
   - cmd: echo %CXX_COMPILER%
   - cmd: cmake .. -GNinja -DCMAKE_BUILD_TYPE=%CONFIGURATION%
