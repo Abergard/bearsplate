@@ -58,12 +58,14 @@ build_script:
                      -DENABLE_TESTING=TRUE
 
   - cmake --build . --config %CONFIGURATION% -j 2
+  - ls C:/projects/bearsplate
+  - ls C:/projects/bearsplate/build
 
 test_script:
   - ctest --output-on-failure -j 2
   
 artifacts:
-  - path: '%APPVEYOR_BUILD_FOLDER%/build/bin/bearsplate.exe'
+  - path: 'build/bin/bearsplate.exe'
     name: binary
   
 deploy:
