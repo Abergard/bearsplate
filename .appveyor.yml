@@ -9,31 +9,28 @@ image:
 build:
   verbosity: detailed
 
-environment:
-  matrix:
-    - c_compiler: clang-cl
-      cxx_compiler: clang-cl
+for:
+  - matrix:
+      only:
+        - image: Visual Studio 2019
+      environment:
+        matrix:
+          - c_compiler: clang-cl
+            cxx_compiler: clang-cl
 
-    - c_compiler: cl
-      cxx_compiler: cl
-      
-    - c_compiler: gcc
-      cxx_compiler: g++
+          - c_compiler: cl
+            cxx_compiler: cl
+
+  - matrix:
+      only:
+        - image: Ubuntu1804
+      environment:
+        matrix:
+          - c_compiler: gcc
+            cxx_compiler: g++
 
 matrix:
   fast_finish: true
-  exclude:
-    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
-      c_compiler: gcc
-      cxx_compiler: g++
-
-    - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu1804
-      c_compiler: clang-cl
-      cxx_compiler: clang-cl
-
-    - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu1804
-      c_compiler: cl
-      cxx_compiler: cl
 
 platform:
   - x86
