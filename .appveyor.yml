@@ -130,8 +130,8 @@ artifacts:
     name: application
 
 deploy:
-  release: bearsplate-vTest
-  description: 'Release bearsplate-v$APPVEYOR_BUILD_VERSION for windows'
+  release: bearsplate-v$(version)
+  description: 'Release bearsplate-v$(APPVEYOR_BUILD_VERSION) for windows'
   provider: GitHub
   auth_token:
     secure: 6sWJttUxwB1HzKovRfV2uEx7bTNdSP/g9X4cupAFmM0J3SQvd+nddSMLXJW7R/vC
@@ -142,4 +142,5 @@ deploy:
   on:
     branch: ubuntu
     CONFIGURATION: Release
+    COMPILER: native
     APPVEYOR_REPO_TAG: false
