@@ -20,7 +20,7 @@ environment:
       c_compiler: cl
       cxx_compiler: cl
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
-      compiler: clang-win
+      compiler: clang
       c_compiler: clang-cl
       cxx_compiler: clang-cl
 
@@ -81,7 +81,7 @@ build_script:
                      -DCMAKE_C_COMPILER=%C_COMPILER%
                      -DENABLE_TESTING=TRUE
   - cmd: cmake --build . --config %CONFIGURATION% -j 2
-  - cmd: set to_deploy=bearsplate-%COMPILER%.exe
+  - cmd: set to_deploy=bearsplate-win-%COMPILER%.exe
   - cmd: cd bin
   - cmd: rename bearsplate.exe %to_deploy%
 
@@ -92,7 +92,7 @@ build_script:
                      -DCMAKE_C_COMPILER=${c_compiler}
                      -DENABLE_TESTING=TRUE
   - sh: cmake --build . --config ${configuration} -j 2
-  - sh: export to_deploy=bearsplate-${compiler}
+  - sh: export to_deploy=bearsplate-linux-${compiler}
   - sh: mv bin/bearsplate bin/$to_deploy
 
 test_script:
@@ -103,7 +103,7 @@ artifacts:
     name: application
 
 deploy:
-  release: bearsplate-v1.0
+  release: bearsplate-v$(APPVEYOR_BUILD_VERSION)
   description: 'Release bearsplate-v$(APPVEYOR_BUILD_VERSION)'
   provider: GitHub
   auth_token:
