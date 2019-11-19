@@ -44,8 +44,10 @@ cache:
 install:
   - cmd: echo %cd%
   - sh: pwd
-  - cmd: set NINJA_URL="https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-win.zip"
+  - cmd: set NINJA_URL="https://github.com/ninja-build/ninja/releases/download/v1.9.0/ninja-win.zip"
+  - sh: export NINJA_URL="https://github.com/ninja-build/ninja/releases/download/v1.9.0/ninja-linux.zip"
   - cmd: set DEPS_DIR="%APPVEYOR_BUILD_FOLDER%\..\deps"
+  - sh: export DEPS_DIR="${APPVEYOR_BUILD_FOLDER}\..\deps"
 
   - cmd: if not exist %DEPS_DIR% (
       mkdir %DEPS_DIR% &&
