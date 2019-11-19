@@ -24,8 +24,10 @@ environment:
       c_compiler: clang-cl
       cxx_compiler: clang-cl
 
-#matrix:
-  #fast_finish: true
+matrix:
+  fast_finish: true
+  pull_requests:
+    do_not_increment_build_number: true
 
 platform:
   #- x86
@@ -81,7 +83,7 @@ build_script:
                      -DCMAKE_C_COMPILER=%C_COMPILER%
                      -DENABLE_TESTING=TRUE
   - cmd: cmake --build . --config %CONFIGURATION% -j 2
-  - cmd: set to_deploy=bearsplate-win-%COMPILER%.exe
+  - cmd: set to_deploy=bearsplate-win-%PLATFORM%-%COMPILER%.exe
   - cmd: cd bin
   - cmd: rename bearsplate.exe %to_deploy%
 
@@ -92,7 +94,7 @@ build_script:
                      -DCMAKE_C_COMPILER=${c_compiler}
                      -DENABLE_TESTING=TRUE
   - sh: cmake --build . --config ${configuration} -j 2
-  - sh: export to_deploy=bearsplate-linux-${compiler}
+  - sh: export to_deploy=bearsplate-linux-${platform}-${compiler}
   - sh: mv bin/bearsplate bin/$to_deploy
 
 test_script:
