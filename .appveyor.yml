@@ -2,18 +2,23 @@ skip_tags: true
 
 version: '1.0.{build}'
 
-image:
-  #- Visual Studio 2019
-  - Ubuntu1804
-  - Visual Studio 2019
-
 build:
   verbosity: detailed
 
 environment:
   matrix:
-    - compiler: native
-    - compiler: clang
+    - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+      c_compiler: gcc
+      cxx_compiler: g++
+    - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+      c_compiler: gcc
+      cxx_compiler: g++
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+      c_compiler: cl
+      cxx_compiler: cl
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+      c_compiler: clang-cl
+      cxx_compiler: clang-cl
 
 #matrix:
   #fast_finish: true
@@ -23,41 +28,15 @@ for:
     matrix:
       only:
         - image: Visual Studio 2019
-          compiler: native
     environment:
       to_deploy: bearsplate.exe
-      c_compiler: cl
-      cxx_compiler: cl
-
-  -
-    matrix:
-      only:
-        - image: Visual Studio 2019
-          compiler: clang
-    environment:
-      to_deploy: bearsplate.exe
-      c_compiler: clang-cl
-      cxx_compiler: clang-cl
       
   -
     matrix:
       only:
         - image: Ubuntu1804
-          compiler: native
     environment:
       to_deploy: bearsplate
-      c_compiler: gcc
-      cxx_compiler: g++
-
-  -
-    matrix:
-      only:
-        - image: Ubuntu1804
-          compiler: clang
-    environment:
-      to_deploy: bearsplate
-      c_compiler: clang
-      cxx_compiler: clang++
 
 platform:
   #- x86
@@ -130,8 +109,8 @@ artifacts:
     name: application
 
 deploy:
-  release: bearsplate-v$(version)
-  description: 'Release bearsplate-v$(APPVEYOR_BUILD_VERSION) for windows'
+  release: bearsplate
+  description: 'Release bearsplate-v$(APPVEYOR_BUILD_VERSION)'
   provider: GitHub
   auth_token:
     secure: 6sWJttUxwB1HzKovRfV2uEx7bTNdSP/g9X4cupAFmM0J3SQvd+nddSMLXJW7R/vC
@@ -142,5 +121,4 @@ deploy:
   on:
     branch: ubuntu
     CONFIGURATION: Release
-    COMPILER: native
     APPVEYOR_REPO_TAG: false
