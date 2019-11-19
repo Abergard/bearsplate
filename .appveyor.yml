@@ -130,7 +130,7 @@ artifacts:
     name: application
 
 deploy:
-  release: bearsplate-v$(appveyor_build_version)-%platform%-win
+  release: bearsplate-v$(appveyor_build_version)
   description: 'Release bearsplate-v$(appveyor_build_version) for windows'
   provider: GitHub
   auth_token:
@@ -138,8 +138,8 @@ deploy:
   artifact: application
   draft: false
   prerelease: false
+  force_update: true
   on:
-    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
-    branch: master
+    branch: ubuntu
     configuration: Release
     APPVEYOR_REPO_TAG: false
