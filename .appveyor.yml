@@ -23,21 +23,6 @@ environment:
 #matrix:
   #fast_finish: true
 
-for:      
-  -
-    matrix:
-      only:
-        - image: Visual Studio 2019
-    environment:
-      to_deploy: bearsplate.exe
-      
-  -
-    matrix:
-      only:
-        - image: Ubuntu1804
-    environment:
-      to_deploy: bearsplate
-
 platform:
   #- x86
   - x64
@@ -92,6 +77,8 @@ build_script:
                      -DCMAKE_C_COMPILER=%C_COMPILER%
                      -DENABLE_TESTING=TRUE
   - cmd: cmake --build . --config %CONFIGURATION% -j 2
+  - cmd: set to_deploy="bearsplate-%CXX_COMPILER%.exe"
+  - cmd: rename bin/bearsplate.exe bin/%to_deploy%
 
   - sh: echo ${cxx_compiler}
   - sh: echo ${c_compiler}
@@ -100,6 +87,8 @@ build_script:
                      -DCMAKE_C_COMPILER=${c_compiler}
                      -DENABLE_TESTING=TRUE
   - sh: cmake --build . --config ${configuration} -j 2
+  - sh: export to_deploy="bearsplate-%CXX_COMPILER%"
+  - sh: mv bin/bearsplate bin/$to_deploy
 
 test_script:
   - ctest --output-on-failure -j 2
