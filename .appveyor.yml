@@ -1,6 +1,6 @@
 skip_tags: true
 
-version: '1.0.{build}'
+version: '1.0.{branch}.{build}'
 
 pull_requests:
   do_not_increment_build_number: true
@@ -31,11 +31,11 @@ matrix:
   fast_finish: true
 
 platform:
-  #- x86
+  - x86
   - x64
 
 configuration:
-  #- Debug
+  - Debug
   - Release
 
 cache:
@@ -95,7 +95,7 @@ build_script:
                      -DCMAKE_C_COMPILER=${c_compiler}
                      -DENABLE_TESTING=TRUE
   - sh: cmake --build . --config ${configuration} -j 2
-  - sh: export to_deploy=bearsplate-linux-${platform}-${compiler}
+  - sh: export to_deploy=bearsplate-linux-${PLATFORM}-${compiler}
   - sh: mv bin/bearsplate bin/$to_deploy
 
 test_script:
