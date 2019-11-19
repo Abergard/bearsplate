@@ -1,6 +1,6 @@
 skip_tags: true
 
-version: '1.0.{build}'
+version: '1.1.{build}'
 
 build:
   verbosity: detailed
@@ -77,7 +77,7 @@ build_script:
                      -DCMAKE_C_COMPILER=%C_COMPILER%
                      -DENABLE_TESTING=TRUE
   - cmd: cmake --build . --config %CONFIGURATION% -j 2
-  - cmd: set to_deploy="bearsplate-%CXX_COMPILER%.exe"
+  - cmd: set to_deploy=bearsplate-%CXX_COMPILER%.exe
   - cmd: rename bin/bearsplate.exe bin/%to_deploy%
 
   - sh: echo ${cxx_compiler}
@@ -87,7 +87,7 @@ build_script:
                      -DCMAKE_C_COMPILER=${c_compiler}
                      -DENABLE_TESTING=TRUE
   - sh: cmake --build . --config ${configuration} -j 2
-  - sh: export to_deploy="bearsplate-%CXX_COMPILER%"
+  - sh: export to_deploy=bearsplate-$CXX_COMPILER
   - sh: mv bin/bearsplate bin/$to_deploy
 
 test_script:
@@ -98,7 +98,7 @@ artifacts:
     name: application
 
 deploy:
-  release: bearsplate
+  release: bearsplate-v1.0
   description: 'Release bearsplate-v$(APPVEYOR_BUILD_VERSION)'
   provider: GitHub
   auth_token:
