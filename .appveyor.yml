@@ -1,6 +1,6 @@
 skip_tags: true
 
-version: '1.1.{build}'
+version: '1.0.{build}'
 
 build:
   verbosity: detailed
@@ -8,15 +8,19 @@ build:
 environment:
   matrix:
     - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+      compiler: gcc
       c_compiler: gcc
       cxx_compiler: g++
     - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+      compiler: clang
       c_compiler: clang
       cxx_compiler: clang++
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+      compiler: msvc
       c_compiler: cl
       cxx_compiler: cl
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+      compiler: clang-win
       c_compiler: clang-cl
       cxx_compiler: clang-cl
 
@@ -77,7 +81,7 @@ build_script:
                      -DCMAKE_C_COMPILER=%C_COMPILER%
                      -DENABLE_TESTING=TRUE
   - cmd: cmake --build . --config %CONFIGURATION% -j 2
-  - cmd: set to_deploy=bearsplate-%CXX_COMPILER%.exe
+  - cmd: set to_deploy=bearsplate-%COMPILER%.exe
   - cmd: cd bin
   - cmd: rename bearsplate.exe %to_deploy%
 
@@ -88,7 +92,7 @@ build_script:
                      -DCMAKE_C_COMPILER=${c_compiler}
                      -DENABLE_TESTING=TRUE
   - sh: cmake --build . --config ${configuration} -j 2
-  - sh: export to_deploy=bearsplate-${cxx_compiler}
+  - sh: export to_deploy=bearsplate-${compiler}
   - sh: mv bin/bearsplate bin/$to_deploy
 
 test_script:
