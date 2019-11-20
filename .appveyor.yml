@@ -85,7 +85,7 @@ build_script:
 
   - ps: cmake --build . --config "$env:configuration" -j 2
   - ps: $to_deploy="bearsplate-win-$env:platform-$env:compiler.exe"
-  - ps: Write-Host "to deploy: $env:to_deploy"
+  - ps: Write-Host "to deploy $env:to_deploy"
   #- cmd: set to_deploy=bearsplate-win-%PLATFORM%-%COMPILER%.exe
   - cd bin
   - cmd: rename bearsplate.exe %to_deploy% 
