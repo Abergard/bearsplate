@@ -81,21 +81,27 @@ build_script:
   - cmd: echo %c_compiler%
   - cmd: echo %C_COMPILER%
   - cmd: echo %CXX_COMPILER%
-  - cmd: cmake .. -GNinja -DCMAKE_BUILD_TYPE=%CONFIGURATION%
-                     -DCMAKE_CXX_COMPILER=%CXX_COMPILER%
-                     -DCMAKE_C_COMPILER=%C_COMPILER%
-                     -DENABLE_TESTING=TRUE
-  - cmd: cmake --build . --config %CONFIGURATION% -j 2
-  - cmd: set to_deploy=bearsplate-win-%PLATFORM%-%COMPILER%.exe
-  - cmd: cd bin
-  - cmd: rename bearsplate.exe %to_deploy%
+  - ps: Write-Host "This is $cxx_compiler" 
+#  - cmd: cmake .. -GNinja -DCMAKE_BUILD_TYPE=%CONFIGURATION%
+#                     -DCMAKE_CXX_COMPILER=%CXX_COMPILER%
+#                     -DCMAKE_C_COMPILER=%C_COMPILER%
+#                     -DENABLE_TESTING=TRUE
+#  - cmd: cmake --build . --config %CONFIGURATION% -j 2
+#  - cmd: set to_deploy=bearsplate-win-%PLATFORM%-%COMPILER%.exe
+#  - cmd: cd bin
+#  - cmd: rename bearsplate.exe %to_deploy%
 
   - sh: echo ${cxx_compiler}
   - sh: echo ${c_compiler}
-  - sh: cmake .. -GNinja -DCMAKE_BUILD_TYPE=${configuration}
-                     -DCMAKE_CXX_COMPILER=${cxx_compiler}
-                     -DCMAKE_C_COMPILER=${c_compiler}
+  - ps: cmake .. -GNinja -DCMAKE_BUILD_TYPE=$configuration
+                     -DCMAKE_CXX_COMPILER=$cxx_compiler
+                     -DCMAKE_C_COMPILER=$c_compiler
                      -DENABLE_TESTING=TRUE
+
+  - cmd: cmake --build . --config %CONFIGURATION% -j 2
+  - cmd: set to_deploy=bearsplate-win-%PLATFORM%-%COMPILER%.exe
+  - cmd: cd bin
+  - cmd: rename bearsplate.exe %to_deploy% 
   - sh: cmake --build . --config ${configuration} -j 2
   - sh: export to_deploy=bearsplate-linux-${PLATFORM}-${compiler}
   - sh: mv bin/bearsplate bin/$to_deploy
