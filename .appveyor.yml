@@ -77,36 +77,21 @@ build_script:
   - nproc
   - mkdir build
   - cd build
-
-  - cmd: echo %c_compiler%
-  - cmd: echo %C_COMPILER%
-  - cmd: echo %CXX_COMPILER%
-# - cmd: cmake .. -GNinja -DCMAKE_BUILD_TYPE=%CONFIGURATION%
-#                     -DCMAKE_CXX_COMPILER=%CXX_COMPILER%
-#                     -DCMAKE_C_COMPILER=%C_COMPILER%
-#                     -DENABLE_TESTING=TRUE
-#  - cmd: cmake --build . --config %CONFIGURATION% -j 2
-#  - cmd: set to_deploy=bearsplate-win-%PLATFORM%-%COMPILER%.exe
-#  - cmd: cd bin
-#  - cmd: rename bearsplate.exe %to_deploy%
-
-  - sh: echo ${cxx_compiler}
-  - sh: echo ${c_compiler}
-  - ps: Write-Host "This is $env:configuration"
-  - ps: Write-Host "This is $env:c_compiler"
-  - ps: Write-Host "This is $env:cxx_compiler"
-  - ps: cmake .. -GNinja -DCMAKE_BUILD_TYPE=$env:configuration
+  - ps: Write-Host "compilation with $env:c_compiler and $env:cxx_compiler"
+  - ps: cmake .. -GNinja -DCMAKE_BUILD_TYPE="$env:configuration"
                      -DCMAKE_CXX_COMPILER="$env:cxx_compiler"
-                     -DCMAKE_C_COMPILER=$env:c_compiler
+                     -DCMAKE_C_COMPILER="$env:c_compiler"
                      -DENABLE_TESTING=TRUE
 
-  - cmd: cmake --build . --config %CONFIGURATION% -j 2
-  - cmd: set to_deploy=bearsplate-win-%PLATFORM%-%COMPILER%.exe
-  - cmd: cd bin
+  - ps: cmake --build . --config "$env:configuration" -j 2
+  - ps: $to_deploy="bearsplate-win-$env:platform-$env:compiler.exe"
+  - ps: Write-Host "to deploy: $env:to_deploy"
+  #- cmd: set to_deploy=bearsplate-win-%PLATFORM%-%COMPILER%.exe
+  - cd bin
   - cmd: rename bearsplate.exe %to_deploy% 
   - sh: cmake --build . --config ${configuration} -j 2
   - sh: export to_deploy=bearsplate-linux-${PLATFORM}-${compiler}
-  - sh: mv bin/bearsplate bin/$to_deploy
+  - sh: mv bearsplate $to_deploy
 
 test_script:
   - ctest --output-on-failure -j 2
