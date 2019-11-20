@@ -92,8 +92,11 @@ build_script:
 
   - sh: echo ${cxx_compiler}
   - sh: echo ${c_compiler}
+  - ps: Write-Host "This is $env:configuration"
+  - ps: Write-Host "This is $env:c_compiler"
+  - ps: Write-Host "This is $env:cxx_compiler"
   - ps: cmake .. -GNinja -DCMAKE_BUILD_TYPE=$env:configuration
-                     -DCMAKE_CXX_COMPILER=$env:cxx_compiler
+                     -DCMAKE_CXX_COMPILER="$env:cxx_compiler"
                      -DCMAKE_C_COMPILER=$env:c_compiler
                      -DENABLE_TESTING=TRUE
 
