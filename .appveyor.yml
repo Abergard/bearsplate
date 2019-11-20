@@ -59,7 +59,7 @@ install:
   - cmd: set NINJA_BIN=%DEPS_DIR%\ninja
   - cmd: set PATH=%NINJA_BIN%;%PATH%
   
-  - sh: sudo apt update
+ # - sh: sudo apt update
   - sh: sudo apt install ninja-build
 
   - ninja --version
@@ -91,7 +91,9 @@ build_script:
 #  - cd bin
  # - cmd: rename bearsplate.exe %to_deploy% 
   #- sh: mv bearsplate $to_deploy
-  - ps: Rename-Item bin\$to_rename $to_deploy
+  - ps: Write-Host "rename $to_rename to $to_deploy"
+  - ps: Write-Host "rename $env:to_rename to $env:to_deploy"
+  - ps: Rename-Item bin\$env:to_rename $env:to_deploy
 
 test_script:
   - ctest --output-on-failure -j 2 .
