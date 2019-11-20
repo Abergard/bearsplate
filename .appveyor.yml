@@ -85,13 +85,15 @@ build_script:
 
   - ps: cmake --build . --config "$env:configuration" -j 2
   - ps: $to_deploy="bearsplate-win-$env:platform-$env:compiler.exe"
-  - ps: Write-Host "to deploy $env:to_deploy"
-  #- cmd: set to_deploy=bearsplate-win-%PLATFORM%-%COMPILER%.exe
-  - cd bin
-  - cmd: rename bearsplate.exe %to_deploy% 
-  - sh: cmake --build . --config ${configuration} -j 2
+  - ps: Write-Host "to deploy $to_deploy"
+  - cmd: set to_deploy=bearsplate-win-%PLATFORM%-%COMPILER%.exe
+  - cmd: set to_rename=bearsplate.exe
   - sh: export to_deploy=bearsplate-linux-${PLATFORM}-${compiler}
-  - sh: mv bearsplate $to_deploy
+  - sh: export to_rename=bearsplate
+  - cd bin
+ # - cmd: rename bearsplate.exe %to_deploy% 
+  #- sh: mv bearsplate $to_deploy
+  - ps: Rename-Item bin\$to_rename $to_deploy
 
 test_script:
   - ctest --output-on-failure -j 2
