@@ -45,10 +45,7 @@ install:
   - cmd: echo %cd%
   - sh: pwd
   - cmd: set NINJA_URL="https://github.com/ninja-build/ninja/releases/download/v1.9.0/ninja-win.zip"
-  - sh: export NINJA_URL="https://github.com/ninja-build/ninja/releases/download/v1.9.0/ninja-linux.zip"
   - cmd: set DEPS_DIR="%APPVEYOR_BUILD_FOLDER%\..\deps"
-  - sh: export DEPS_DIR="${APPVEYOR_BUILD_FOLDER}\..\deps"
-
   - cmd: if not exist %DEPS_DIR% (
       mkdir %DEPS_DIR% &&
       cd %DEPS_DIR% &&
@@ -58,18 +55,17 @@ install:
   - cmd: set BOOST_ROOT=C:\Libraries\boost_1_71_0
   - cmd: set NINJA_BIN=%DEPS_DIR%\ninja
   - cmd: set PATH=%NINJA_BIN%;%PATH%
-  
- # - sh: sudo apt update
+
   - sh: sudo apt install ninja-build
 
   - ninja --version
   - cmd: clang-cl -v
   - sh: gcc --version
+  - sh: clang --version
 
 before_build:
   - cmd: call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat"
-  - cmd: cd %APPVEYOR_BUILD_FOLDER%
-  - sh: cd $APPVEYOR_BUILD_FOLDER
+  - ps: cd $env:APPVEYOR_BUILD_FOLDER
   - git submodule init
   - git submodule update
 
@@ -88,11 +84,6 @@ build_script:
   - cmd: set to_rename=bearsplate.exe
   - sh: export to_deploy=bearsplate-linux-${PLATFORM}-${compiler}
   - sh: export to_rename=bearsplate
-#  - cd bin
- # - cmd: rename bearsplate.exe %to_deploy% 
-  #- sh: mv bearsplate $to_deploy
-  - ps: Write-Host "rename $to_rename to $to_deploy"
-  - ps: Write-Host "rename $env:to_rename to $env:to_deploy"
   - ps: Rename-Item bin\$env:to_rename $env:to_deploy
 
 test_script:
