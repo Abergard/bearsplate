@@ -1,54 +1,71 @@
 skip_tags: true
 
-version: '1.0.{build}'
+version: '1.0.{build}/{branch}'
 
-image:
-  - Visual Studio 2019
+pull_requests:
+  do_not_increment_build_number: true
 
 build:
   verbosity: detailed
 
 environment:
-  package_name: bearsplate.exe
-
   matrix:
-    - c_compiler: clang-cl
+    - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+      compiler: gcc
+      c_compiler: gcc
+      cxx_compiler: g++
+    - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+      compiler: clang
+      c_compiler: clang
+      cxx_compiler: clang++
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+      compiler: msvc
+      c_compiler: cl
+      cxx_compiler: cl
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+      compiler: clang
+      c_compiler: clang-cl
       cxx_compiler: clang-cl
 
-    - c_compiler: cl
-      cxx_compiler: cl
+matrix:
+  fast_finish: true
 
 platform:
-  - x86
+ # - x86
   - x64
 
 configuration:
-  - Debug
+ # - Debug
   - Release
 
 cache:
-  - c:\projects\deps -> .appveyor.yml
+  - ..\deps -> .appveyor.yml
 
 install:
-  - set NINJA_URL="https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-win.zip"
-  - set DEPS_DIR=C:\projects\deps
-
-  - if not exist %DEPS_DIR% (
+  - cmd: echo %cd%
+  - sh: pwd
+  - cmd: set NINJA_URL="https://github.com/ninja-build/ninja/releases/download/v1.9.0/ninja-win.zip"
+  - cmd: set DEPS_DIR="%APPVEYOR_BUILD_FOLDER%\..\deps"
+  - cmd: if not exist %DEPS_DIR% (
       mkdir %DEPS_DIR% &&
       cd %DEPS_DIR% &&
       appveyor DownloadFile %NINJA_URL% -FileName ninja.zip &&
       7z x ninja.zip -o%DEPS_DIR%\ninja > nul )
 
-  - set BOOST_ROOT=C:\Libraries\boost_1_71_0
-  - set NINJA_BIN=%DEPS_DIR%\ninja
-  - set PATH=%NINJA_BIN%;%PATH%
+  - cmd: set BOOST_ROOT=C:\Libraries\boost_1_71_0
+  - cmd: set NINJA_BIN=%DEPS_DIR%\ninja
+  - cmd: set PATH=%NINJA_BIN%;%PATH%
+
+  - sh: sudo apt install ninja-build
 
   - ninja --version
-  - clang-cl -v
+  - cmd: clang-cl -v
+  - sh: gcc --version
+  - sh: clang --version
 
 before_build:
-  - call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat"
-  - cd %APPVEYOR_BUILD_FOLDER%
+  - cmd: call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat"
+  - ps: cd $env:APPVEYOR_BUILD_FOLDER
   - git submodule init
   - git submodule update
 
@@ -56,33 +73,37 @@ build_script:
   - nproc
   - mkdir build
   - cd build
-  - cmake .. -GNinja -DCMAKE_BUILD_TYPE=%CONFIGURATION%
-                     -DCMAKE_CXX_COMPILER=%CXX_COMPILER%
-                     -DCMAKE_C_COMPILER=%C_COMPILER%
+  - ps: Write-Host "compilation with $env:c_compiler and $env:cxx_compiler"
+  - ps: cmake .. -GNinja -DCMAKE_BUILD_TYPE="$env:configuration"
+                     -DCMAKE_CXX_COMPILER="$env:cxx_compiler"
+                     -DCMAKE_C_COMPILER="$env:c_compiler"
                      -DENABLE_TESTING=TRUE
 
-  - cmake --build . --config %CONFIGURATION% -j 2
+  - ps: cmake --build . --config "$env:configuration" -j 2
+  - cmd: set to_deploy=bearsplate-win-%PLATFORM%-%COMPILER%.exe
+  - cmd: set to_rename=bearsplate.exe
+  - sh: export to_deploy=bearsplate-linux-${PLATFORM}-${compiler}
+  - sh: export to_rename=bearsplate
+  - ps: Rename-Item bin\$env:to_rename $env:to_deploy
 
 test_script:
-  - ctest --output-on-failure -j 2
+  - ctest --output-on-failure -j 2 .
 
 artifacts:
-  - path: 'build/bin/%PACKAGE_NAME%'
-    name: binary
+  - path: 'build/bin/$(to_deploy)'
+    name: application
 
 deploy:
-  release: bearsplate-v$(appveyor_build_version)-%platform%-win
-  description: 'Release %PACKAGE_NAME%-v$(appveyor_build_version) for windows'
+  release: bearsplate-v$(APPVEYOR_BUILD_VERSION)
+  description: 'Release bearsplate-v$(APPVEYOR_BUILD_VERSION)'
   provider: GitHub
   auth_token:
     secure: 6sWJttUxwB1HzKovRfV2uEx7bTNdSP/g9X4cupAFmM0J3SQvd+nddSMLXJW7R/vC
-  artifact: binary
+  artifact: application
   draft: false
   prerelease: false
+  force_update: true
   on:
-    branch: master
-    configuration: Release
+    branch: ubuntu
+    CONFIGURATION: Release
     APPVEYOR_REPO_TAG: false
-
-matrix:
-  fast_finish: true
