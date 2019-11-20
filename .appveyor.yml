@@ -81,10 +81,6 @@ build_script:
   - cmd: echo %c_compiler%
   - cmd: echo %C_COMPILER%
   - cmd: echo %CXX_COMPILER%
-  - ps: Write-Host "This 1is $env:CXX_COMPILER" 
-  - ps: Write-Host "This 2is ${CXX_COMPILER}"  
-  - ps: Write-Host "This 3is $env:cxx_compiler" 
-  - ps: Write-Host "This 4is ${cxx_compiler}" 
 # - cmd: cmake .. -GNinja -DCMAKE_BUILD_TYPE=%CONFIGURATION%
 #                     -DCMAKE_CXX_COMPILER=%CXX_COMPILER%
 #                     -DCMAKE_C_COMPILER=%C_COMPILER%
@@ -96,9 +92,9 @@ build_script:
 
   - sh: echo ${cxx_compiler}
   - sh: echo ${c_compiler}
-  - ps: cmake .. -GNinja -DCMAKE_BUILD_TYPE=$configuration
-                     -DCMAKE_CXX_COMPILER=$cxx_compiler
-                     -DCMAKE_C_COMPILER=$c_compiler
+  - ps: cmake .. -GNinja -DCMAKE_BUILD_TYPE=$env:configuration
+                     -DCMAKE_CXX_COMPILER=$env:cxx_compiler
+                     -DCMAKE_C_COMPILER=$env:c_compiler
                      -DENABLE_TESTING=TRUE
 
   - cmd: cmake --build . --config %CONFIGURATION% -j 2
