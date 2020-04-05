@@ -1,6 +1,6 @@
 skip_tags: true
 
-version: '1.0.{build}'
+version: '0.0.{build}'
 
 image:
   - Visual Studio 2019
