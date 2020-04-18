@@ -60,6 +60,7 @@ build_script:
                      -DCMAKE_CXX_COMPILER=%CXX_COMPILER%
                      -DCMAKE_C_COMPILER=%C_COMPILER%
                      -DENABLE_TESTING=TRUE
+                     -Dgtest_force_shared_crt=ON
 
   - cmake --build . --config %CONFIGURATION% -j 2
 
