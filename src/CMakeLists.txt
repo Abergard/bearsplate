@@ -1,11 +1,16 @@
 add_library(bearsplate-core STATIC bearsplate.cpp)
-add_executable(bearsplate-ut bearsplate-ut.cpp)
-target_link_libraries(bearsplate-ut PRIVATE bearsplate-core gmock_main)
-add_test(
-  NAME bearsplate-ut
-  COMMAND ${EXECUTABLE_OUTPUT_PATH}/bearsplate-ut --gtest_color=yes
-  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-  )
+
+if(ENABLE_TESTING)
+  set(EXTERNAL_TEST_LIB "externals/googletest")
+  add_subdirectory("${PROJECT_SOURCE_DIR}/${EXTERNAL_TEST_LIB}" ${EXTERNAL_TEST_LIB})
+
+  add_executable(bearsplate-ut bearsplate-ut.cpp)
+  target_link_libraries(bearsplate-ut PRIVATE bearsplate-core gmock_main)
+  gtest_discover_tests(bearsplate-ut
+    EXTRA_ARGS --gtest_color=yes
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+endif()
+
 
 if(WIN32 AND NOT FORCE_BUILD_CONSOLE_APP)
   message(STATUS "WIN32 application")
